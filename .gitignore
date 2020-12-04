@@ -1,0 +1,16 @@
+.gradle
+gradle
+.idea
+out
+*/task/build
+
+*.iml
+*.class
+*.yaml
+*.html
+*.css
+*.js
+*.gradle
+*.bat
+
+gradlew
