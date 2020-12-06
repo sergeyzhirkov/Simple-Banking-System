@@ -1,0 +1,27 @@
+package banking;
+
+import java.util.Objects;
+
+public class Account {
+    private int balance;
+    private Card card;
+
+    public Account(int balance, Card card) {
+        this.balance = balance;
+        this.card = card;
+    }
+
+    public Account(Card card) {
+        balance = 0;
+        this.card = card;
+    }
+
+    public int getBalance() {
+        return balance;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+}
