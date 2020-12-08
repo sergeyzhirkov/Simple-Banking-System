@@ -1,4 +1,4 @@
-package banking;
+package banking.bankcard;
 
 import java.util.Objects;
 

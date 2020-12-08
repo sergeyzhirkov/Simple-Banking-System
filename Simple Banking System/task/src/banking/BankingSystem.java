@@ -1,5 +1,8 @@
 package banking;
 
+import banking.bankcard.Card;
+import banking.bankcard.CardGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
