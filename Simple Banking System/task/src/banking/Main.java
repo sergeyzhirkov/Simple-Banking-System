@@ -2,6 +2,6 @@ package banking;
 
 public class Main {
     public static void main(String[] args) {
-        BankingSystem.run();
+        new BankingSystem().run(args[1]);
     }
 }

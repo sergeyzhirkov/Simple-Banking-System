@@ -2,17 +2,17 @@ package banking;
 
 import banking.bankcard.Card;
 import banking.bankcard.CardGenerator;
-
-import java.util.ArrayList;
-import java.util.List;
+import banking.database.InterfaceDB;
+import banking.database.SQLiteDatabase;
 import java.util.Scanner;
 
 public class BankingSystem {
-    static List<Account> accounts = new ArrayList<>();
-    static Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
+    private InterfaceDB dataBase;
+    private boolean isExit = false;
 
-    public static void run() {
-        boolean isExit = false;
+    public void run(String databaseName) {
+        dataBase = new SQLiteDatabase(databaseName);
 
         while (!isExit) {
             welcomeInterface();
@@ -27,26 +27,23 @@ public class BankingSystem {
                 case 0:
                     System.out.println("Bye!");
                     isExit = true;
+
                     break;
+            }
+            if (isExit) {
+                dataBase.close();
             }
         }
     }
 
-    private static void loggingInBankSystem() {
+    private void loggingInBankSystem() {
         System.out.println("Enter your card number:");
         String cardNumberTest = scanner.nextLine();
         System.out.println("Enter your PIN:");
         String  pinTest = scanner.nextLine();
-        boolean isExist = false;
-        Account current = null;
-        for (Account account : accounts) {
-            if (account.getCard().equals(new Card(cardNumberTest, pinTest))) {
-                isExist = true;
-                current = account;
-                break;
-            }
-        }
-        if (isExist) {
+        Account current = dataBase.findAccount(new Card(cardNumberTest, pinTest));
+
+        if (current != null) {
             System.out.println("You have successfully logged in!");
             boolean isLogout = false;
 
@@ -65,6 +62,7 @@ public class BankingSystem {
                         break;
                     case 0:
                         System.out.println("\nBye!");
+                        isExit = true;
                         return;
                 }
             }
@@ -74,9 +72,9 @@ public class BankingSystem {
         
     }
 
-    private static void registerCard() {
+    private void registerCard() {
         Account newUser = new Account(CardGenerator.create());
-        accounts.add(newUser);
+        dataBase.createAccount(newUser);
         System.out.println(String.format(
                 "Your card has been created\n" +
                         "Your card number:\n" +
@@ -88,7 +86,7 @@ public class BankingSystem {
         );
     }
 
-    private static void welcomeInterface() {
+    private void welcomeInterface() {
         System.out.println(
                 "1. Create an account\n" +
                         "2. Log into account\n" +
