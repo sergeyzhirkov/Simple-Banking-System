@@ -14,7 +14,11 @@ public class SQLiteDatabase implements InterfaceDB {
                     "pin TEXT," +
                     "balance INTEGER DEFAULT 0)";
     private static final String SQL_ADD_ACCOUNT = "INSERT INTO card (number, pin) VALUES (?, ?)";
-    private static final String SQL_FIND_ACCOUNT = "SELECT number, pin, balance FROM card WHERE number = ? AND pin = ?";
+    private static final String SQL_LOGIN_ACCOUNT = "SELECT number, pin, balance FROM card WHERE number = ? AND pin = ?";
+    private static final String SQL_FIND_ACCOUNT = "SELECT number, pin, balance FROM card WHERE number = ?";
+    private static final String SQL_UPDATE_ACCOUNT = "UPDATE card SET balance = balance + ? WHERE number = ?";
+    private static final String SQL_DELETE_ACCOUNT = "DELETE FROM card WHERE number = ?";
+
     private SQLiteDataSource dataSource;
     private Connection con;
     private final String DATABASE_URL;
@@ -46,26 +50,61 @@ public class SQLiteDatabase implements InterfaceDB {
             ps.setString(2, userAccount.getCard().getPin());
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Creating account error!");
+            System.out.println("Create account error!");
         }
     }
 
     @Override
-    public Account findAccount(Card userCard) {
+    public Account loginAccount(Card userCard) {
         Account resultAccount = null;
-        try (PreparedStatement ps = con.prepareStatement(SQL_FIND_ACCOUNT)) {
+        try (PreparedStatement ps = con.prepareStatement(SQL_LOGIN_ACCOUNT)) {
             ps.setString(1, userCard.getNumber());
-            ps.setString(2,userCard.getPin());
+            ps.setString(2, userCard.getPin());
             ResultSet rs = ps.executeQuery();
-            if (!rs.next()) {
+            int balance = rs.getInt("balance");
+            resultAccount = new Account(balance, userCard);
+            if (rs.next()) {
                 return resultAccount;
             }
-            int balance = rs.getInt("balance");
-            resultAccount =  new Account(balance, userCard);
         } catch (SQLException e) {
-            System.out.println("Finding account error!");
+            System.out.println("Login account error!");
         }
         return resultAccount;
+    }
+
+    @Override
+    public boolean findAccount(String cardNumber) {
+        try (PreparedStatement ps = con.prepareStatement(SQL_FIND_ACCOUNT)) {
+            ps.setString(1, cardNumber);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Find account error!");
+        }
+        return false;
+    }
+
+    @Override
+    public void updateAccount(String cardNumber, int changeBalance) {
+        try (PreparedStatement ps = con.prepareStatement(SQL_UPDATE_ACCOUNT)) {
+            ps.setString(1, Integer.toString(changeBalance));
+            ps.setString(2, cardNumber);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Update account error!");
+        }
+    }
+
+    @Override
+    public void deleteAccount(Account userAccount) {
+        try (PreparedStatement ps = con.prepareStatement(SQL_DELETE_ACCOUNT)) {
+            ps.setString(1, userAccount.getCard().getNumber());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Delete account error!");
+        }
     }
 
     @Override
