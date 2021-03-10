@@ -22,10 +22,10 @@ public class CardGenerator {
     }
 
     private static int algorithmLuhn(int bin, int accountIdentifier) {
-        String  rawNumbers = ("" + bin + accountIdentifier);
+        String rawNumbers = ("" + bin + accountIdentifier);
         int sum = 0;
         for (int i = 0; i < rawNumbers.length(); i++) {
-            int digit = Integer.parseInt(rawNumbers.substring(i, i+1));
+            int digit = Integer.parseInt(rawNumbers.substring(i, i + 1));
             if (i % 2 == 0) {
                 digit *= 2;
             }
@@ -33,6 +33,23 @@ public class CardGenerator {
             sum += digit;
         }
         return (10 - (sum % 10)) % 10;
+    }
+
+    public static boolean isCorrectNumber(String cardNumber) {
+        if (cardNumber.length() != 16) {
+            return false;
+        }
+        int bin = 0;
+        int accountIdentifier = 0;
+        int lastDigit = 0;
+        try {
+            bin = Integer.parseInt(cardNumber.substring(0, 6));
+            accountIdentifier = Integer.parseInt(cardNumber.substring(6, 15));
+            lastDigit = Integer.parseInt(cardNumber.substring(15));
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return algorithmLuhn(bin, accountIdentifier) == lastDigit;
     }
 
 

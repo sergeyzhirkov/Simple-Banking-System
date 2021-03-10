@@ -20,6 +20,10 @@ public class Account {
         return balance;
     }
 
+    public void addBalance(int balance) {
+        this.balance += balance;
+    }
+
     public Card getCard() {
         return card;
     }
