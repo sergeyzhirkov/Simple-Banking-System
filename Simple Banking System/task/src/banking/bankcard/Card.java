@@ -28,4 +28,8 @@ public class Card {
                 Objects.equals(pin, card.pin);
     }
 
+    @Override
+    public int hashCode() {
+        return 31 * number.hashCode() + pin.hashCode();
+    }
 }

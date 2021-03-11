@@ -1,0 +1,36 @@
+
+Your card has been created
+Your card number:
+4000008129685405
+Your card PIN:
+6214
+
+Balance: 0$
+
+You have successfully logged in!
+
+Card balance: 
+
+0$
+
+add balance for: 15000
+
+Income was added!
+
+Card balance: 
+
+15000$
+
+
+You have successfully logged out!
+
+You have successfully logged in!
+
+Transfer money: 1375 
+ to card: 4000002618546327
+
+Success!
+
+Card balance: 
+
+13625$
