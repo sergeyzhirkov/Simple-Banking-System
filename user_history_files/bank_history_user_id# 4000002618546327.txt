@@ -1,0 +1,21 @@
+
+Your card has been created
+Your card number:
+4000002618546327
+Your card PIN:
+3347
+
+Balance: 0$
+
+You have successfully logged in!
+
+Card balance: 
+
+1375$
+
+add balance for: 4000
+
+Income was added!
+
+
+You have successfully logged out!

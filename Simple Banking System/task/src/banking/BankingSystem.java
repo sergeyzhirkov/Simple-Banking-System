@@ -4,6 +4,7 @@ import banking.bankcard.Card;
 import banking.bankcard.CardGenerator;
 import banking.database.InterfaceDB;
 import banking.database.SQLiteDatabase;
+import banking.io.UserHistoryFile;
 
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ public class BankingSystem {
     private Scanner scanner = new Scanner(System.in);
     private InterfaceDB dataBase;
     private boolean isExit = false;
+    private UserHistoryFile userHistoryFile;
 
     public void run(String databaseName) {
         dataBase = new SQLiteDatabase(databaseName);
@@ -49,8 +51,10 @@ public class BankingSystem {
         String pinTest = scanner.nextLine();
         Account current = dataBase.loginAccount(new Card(cardNumberTest, pinTest));
 
+        userHistoryFile = new UserHistoryFile(current);
+
         if (current != null) {
-            System.out.println("You have successfully logged in!");
+            userHistoryFile.printMessage("You have successfully logged in!");
             boolean isLogout = false;
 
             while (!isLogout) {
@@ -64,7 +68,8 @@ public class BankingSystem {
 
                 switch (loginAction) {
                     case 1:
-                        System.out.println(current.getBalance());
+                        userHistoryFile.printInfo("Card balance: ");
+                        userHistoryFile.printMessage(current.getBalance() + "$");
                         break;
                     case 2:
                         addIncome(current);
@@ -75,10 +80,12 @@ public class BankingSystem {
                     case 4:
                         System.out.println("The account has been closed!");
                         dataBase.deleteAccount(current);
+                        userHistoryFile.deleteFile();
                         isLogout = true;
                         break;
                     case 5:
-                        System.out.println("\nYou have successfully logged out!");
+                        userHistoryFile.printMessage("\nYou have successfully logged out!");
+                        userHistoryFile = null;
                         isLogout = true;
                         break;
                     case 0:
@@ -116,8 +123,9 @@ public class BankingSystem {
             } else {
                 dataBase.updateAccount(current.getCard().getNumber(), -moneyTransfer);
                 current.addBalance(-moneyTransfer);
+                userHistoryFile.printInfo(String.format("Transfer money: %d \n to card: %s", moneyTransfer, recipientCardNumber));
                 dataBase.updateAccount(recipientCardNumber, moneyTransfer);
-                System.out.println("Success!");
+                userHistoryFile.printMessage("Success!");
             }
         }
     }
@@ -132,13 +140,15 @@ public class BankingSystem {
         }
         dataBase.updateAccount(current.getCard().getNumber(), increment);
         current.addBalance(increment);
-        System.out.println("Income was added!");
+        userHistoryFile.printInfo("add balance for: " + increment);
+        userHistoryFile.printMessage("Income was added!");
     }
 
     private void registerCard() {
         Account newUser = new Account(CardGenerator.create());
         dataBase.createAccount(newUser);
-        System.out.println(String.format(
+        userHistoryFile = new UserHistoryFile(newUser);
+        userHistoryFile.printMessage(String.format(
                 "Your card has been created\n" +
                         "Your card number:\n" +
                         "%s\n" +
@@ -147,6 +157,7 @@ public class BankingSystem {
                 newUser.getCard().getNumber(),
                 newUser.getCard().getPin())
         );
+        userHistoryFile.printInfo("Balance: " + newUser.getBalance() + "$");
     }
 
     private void loginUI() {
