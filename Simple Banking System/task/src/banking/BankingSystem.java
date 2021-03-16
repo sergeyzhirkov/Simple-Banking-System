@@ -40,6 +40,9 @@ public class BankingSystem {
             }
             if (isExit) {
                 dataBase.close();
+                if (userHistoryFile != null) {
+                    userHistoryFile.closeExecuteService();
+                }
             }
         }
     }
@@ -85,6 +88,9 @@ public class BankingSystem {
                         break;
                     case 5:
                         userHistoryFile.printMessage("\nYou have successfully logged out!");
+                        if (userHistoryFile != null) {
+                            userHistoryFile.closeExecuteService();
+                        }
                         userHistoryFile = null;
                         isLogout = true;
                         break;
@@ -158,6 +164,8 @@ public class BankingSystem {
                 newUser.getCard().getPin())
         );
         userHistoryFile.printInfo("Balance: " + newUser.getBalance() + "$");
+        userHistoryFile.closeExecuteService();
+        userHistoryFile = null;
     }
 
     private void loginUI() {
