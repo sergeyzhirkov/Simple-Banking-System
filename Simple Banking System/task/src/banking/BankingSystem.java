@@ -6,9 +6,27 @@ import banking.database.InterfaceDB;
 import banking.database.SQLiteDatabase;
 import banking.io.UserHistoryFile;
 
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.*;
 
 public class BankingSystem {
+    private static final Logger logger = Logger.getLogger(BankingSystem.class.getPackageName());
+
+    static {
+        logger.setLevel(Level.ALL);
+        Handler fileHandler = null;
+        try {
+            fileHandler = new FileHandler("log.log", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fileHandler.setLevel(Level.INFO);
+        fileHandler.setFormatter(new SimpleFormatter());
+        logger.addHandler(fileHandler);
+        logger.setUseParentHandlers(false);
+    }
+
     private Scanner scanner = new Scanner(System.in);
     private InterfaceDB dataBase;
     private boolean isExit = false;
@@ -16,6 +34,7 @@ public class BankingSystem {
 
     public void run(String databaseName) {
         dataBase = new SQLiteDatabase(databaseName);
+        logger.info("new start system.");
 
         while (!isExit) {
             welcomeUI();
@@ -24,6 +43,7 @@ public class BankingSystem {
                 action = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 action = -1;
+                logger.warning("can't parse number");
             }
             switch (action) {
                 case 1:
@@ -39,6 +59,7 @@ public class BankingSystem {
                 default:
             }
             if (isExit) {
+                logger.info("exit program");
                 dataBase.close();
                 if (userHistoryFile != null) {
                     userHistoryFile.closeExecuteService();
@@ -67,12 +88,14 @@ public class BankingSystem {
                     loginAction = Integer.parseInt(scanner.nextLine());
                 } catch (NumberFormatException e) {
                     loginAction = -1;
+                    logger.warning("can't parse number");
                 }
 
                 switch (loginAction) {
                     case 1:
                         userHistoryFile.printInfo("Card balance: ");
                         userHistoryFile.printMessage(current.getBalance() + "$");
+                        logger.info("user get card balance");
                         break;
                     case 2:
                         addIncome(current);
@@ -85,6 +108,7 @@ public class BankingSystem {
                         dataBase.deleteAccount(current);
                         userHistoryFile.deleteFile();
                         isLogout = true;
+                        logger.info("user close account");
                         break;
                     case 5:
                         userHistoryFile.printMessage("\nYou have successfully logged out!");
@@ -93,10 +117,12 @@ public class BankingSystem {
                         }
                         userHistoryFile = null;
                         isLogout = true;
+                        logger.info("user logged out");
                         break;
                     case 0:
                         System.out.println("\nBye!");
                         isExit = true;
+                        logger.info("user is exit");
                         return;
                     default:
                 }
@@ -123,6 +149,7 @@ public class BankingSystem {
                 moneyTransfer = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("You need to write a number!");
+                logger.warning("number format exception");
             }
             if (moneyTransfer > current.getBalance()) {
                 System.out.println("Not enough money!" + current.getBalance());
@@ -132,6 +159,7 @@ public class BankingSystem {
                 userHistoryFile.printInfo(String.format("Transfer money: %d \n to card: %s", moneyTransfer, recipientCardNumber));
                 dataBase.updateAccount(recipientCardNumber, moneyTransfer);
                 userHistoryFile.printMessage("Success!");
+                logger.info("transfer money");
             }
         }
     }
@@ -143,11 +171,13 @@ public class BankingSystem {
             increment = Integer.parseInt(scanner.nextLine());
         } catch (NumberFormatException e) {
             increment = 0;
+            logger.warning("can't parse number");
         }
         dataBase.updateAccount(current.getCard().getNumber(), increment);
         current.addBalance(increment);
         userHistoryFile.printInfo("add balance for: " + increment);
         userHistoryFile.printMessage("Income was added!");
+        logger.info("add money to card");
     }
 
     private void registerCard() {
@@ -166,6 +196,7 @@ public class BankingSystem {
         userHistoryFile.printInfo("Balance: " + newUser.getBalance() + "$");
         userHistoryFile.closeExecuteService();
         userHistoryFile = null;
+        logger.info("register new card " + newUser.getCard().getNumber());
     }
 
     private void loginUI() {
