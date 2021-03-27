@@ -5,6 +5,8 @@ import banking.bankcard.Card;
 import org.sqlite.SQLiteDataSource;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SQLiteDatabase implements InterfaceDB {
     private static final String SQL_CREATE_TABLE =
@@ -19,6 +21,10 @@ public class SQLiteDatabase implements InterfaceDB {
     private static final String SQL_UPDATE_ACCOUNT = "UPDATE card SET balance = balance + ? WHERE number = ?";
     private static final String SQL_DELETE_ACCOUNT = "DELETE FROM card WHERE number = ?";
 
+    private static final Logger logger = Logger.getLogger(SQLiteDatabase.class.getPackageName());
+    static {
+        logger.setLevel(Level.ALL);
+    }
     private SQLiteDataSource dataSource;
     private Connection con;
     private final String DATABASE_URL;
@@ -29,8 +35,9 @@ public class SQLiteDatabase implements InterfaceDB {
         dataSource.setUrl(DATABASE_URL);
         try {
             con = dataSource.getConnection();
+            logger.info("connection DB");
         } catch (SQLException throwables) {
-            System.out.println("Connection error!");
+            logger.severe("Connection error!");
         }
         createTable();
     }
@@ -38,8 +45,9 @@ public class SQLiteDatabase implements InterfaceDB {
     private void createTable() {
         try (Statement statement = con.createStatement()) {
             statement.executeUpdate(SQL_CREATE_TABLE);
+            logger.info("create SQL table");
         } catch (SQLException e) {
-            System.out.println("Creation table error!");
+            logger.severe("Creation table error!");
         }
     }
 
@@ -49,8 +57,9 @@ public class SQLiteDatabase implements InterfaceDB {
             ps.setString(1, userAccount.getCard().getNumber());
             ps.setString(2, userAccount.getCard().getPin());
             ps.executeUpdate();
+            logger.info("create account");
         } catch (SQLException e) {
-            System.out.println("Create account error!");
+            logger.severe("Create account error!");
         }
     }
 
@@ -63,11 +72,12 @@ public class SQLiteDatabase implements InterfaceDB {
             ResultSet rs = ps.executeQuery();
             int balance = rs.getInt("balance");
             resultAccount = new Account(balance, userCard);
+            logger.info("login in account");
             if (rs.next()) {
                 return resultAccount;
             }
         } catch (SQLException e) {
-            System.out.println("Login account error!");
+            logger.severe("Login account error!");
         }
         return resultAccount;
     }
@@ -77,11 +87,12 @@ public class SQLiteDatabase implements InterfaceDB {
         try (PreparedStatement ps = con.prepareStatement(SQL_FIND_ACCOUNT)) {
             ps.setString(1, cardNumber);
             ResultSet rs = ps.executeQuery();
+            logger.info("find account");
             if (rs.next()) {
                 return true;
             }
         } catch (SQLException e) {
-            System.out.println("Find account error!");
+            logger.severe("Find account error!");
         }
         return false;
     }
@@ -92,8 +103,9 @@ public class SQLiteDatabase implements InterfaceDB {
             ps.setString(1, Integer.toString(changeBalance));
             ps.setString(2, cardNumber);
             ps.executeUpdate();
+            logger.info("update account");
         } catch (SQLException e) {
-            System.out.println("Update account error!");
+            logger.severe("Update account error!");
         }
     }
 
@@ -102,8 +114,9 @@ public class SQLiteDatabase implements InterfaceDB {
         try (PreparedStatement ps = con.prepareStatement(SQL_DELETE_ACCOUNT)) {
             ps.setString(1, userAccount.getCard().getNumber());
             ps.executeUpdate();
+            logger.info("delete account");
         } catch (SQLException e) {
-            System.out.println("Delete account error!");
+            logger.severe("Delete account error!");
         }
     }
 
@@ -111,8 +124,9 @@ public class SQLiteDatabase implements InterfaceDB {
     public void close() {
         try {
             con.close();
+            logger.info("close db");
         } catch (SQLException throwables) {
-            System.out.println("Closing error!");
+            logger.severe("Closing error!");
         }
     }
 }

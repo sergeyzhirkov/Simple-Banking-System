@@ -1,0 +1,64 @@
+мар. 22, 2021 6:49:02 PM banking.database.SQLiteDatabase <init>
+INFO: connection DB
+мар. 22, 2021 6:49:02 PM banking.database.SQLiteDatabase createTable
+INFO: create SQL table
+мар. 22, 2021 6:49:02 PM banking.BankingSystem run
+INFO: new start system.
+мар. 22, 2021 6:49:06 PM banking.database.SQLiteDatabase createAccount
+INFO: create account
+мар. 22, 2021 6:49:06 PM banking.io.UserHistoryFile <init>
+INFO: create new file user_banking_history 4000004765769421
+мар. 22, 2021 6:49:06 PM banking.io.UserHistoryFile closeExecuteService
+INFO: stop file thread service
+мар. 22, 2021 6:49:06 PM banking.BankingSystem registerCard
+INFO: register new card 4000004765769421
+мар. 22, 2021 6:49:26 PM banking.database.SQLiteDatabase loginAccount
+INFO: login in account
+мар. 22, 2021 6:49:35 PM banking.BankingSystem loggingInBankSystem
+INFO: user get card balance
+мар. 22, 2021 6:49:51 PM banking.database.SQLiteDatabase updateAccount
+INFO: update account
+мар. 22, 2021 6:49:51 PM banking.BankingSystem addIncome
+INFO: add money to card
+мар. 22, 2021 6:50:05 PM banking.io.UserHistoryFile closeExecuteService
+INFO: stop file thread service
+мар. 22, 2021 6:50:05 PM banking.BankingSystem loggingInBankSystem
+INFO: user logged out
+мар. 22, 2021 6:50:09 PM banking.database.SQLiteDatabase createAccount
+INFO: create account
+мар. 22, 2021 6:50:09 PM banking.io.UserHistoryFile <init>
+INFO: create new file user_banking_history 4000005728790354
+мар. 22, 2021 6:50:09 PM banking.io.UserHistoryFile closeExecuteService
+INFO: stop file thread service
+мар. 22, 2021 6:50:09 PM banking.BankingSystem registerCard
+INFO: register new card 4000005728790354
+мар. 22, 2021 6:50:33 PM banking.database.SQLiteDatabase loginAccount
+INFO: login in account
+мар. 22, 2021 6:50:47 PM banking.database.SQLiteDatabase findAccount
+INFO: find account
+мар. 22, 2021 6:50:58 PM banking.BankingSystem doTransfer
+WARNING: number format exception
+мар. 22, 2021 6:50:58 PM banking.database.SQLiteDatabase updateAccount
+INFO: update account
+мар. 22, 2021 6:50:58 PM banking.database.SQLiteDatabase updateAccount
+INFO: update account
+мар. 22, 2021 6:50:58 PM banking.BankingSystem doTransfer
+INFO: transfer money
+мар. 22, 2021 6:51:19 PM banking.database.SQLiteDatabase findAccount
+INFO: find account
+мар. 22, 2021 6:51:30 PM banking.database.SQLiteDatabase updateAccount
+INFO: update account
+мар. 22, 2021 6:51:30 PM banking.database.SQLiteDatabase updateAccount
+INFO: update account
+мар. 22, 2021 6:51:30 PM banking.BankingSystem doTransfer
+INFO: transfer money
+мар. 22, 2021 6:51:32 PM banking.BankingSystem loggingInBankSystem
+INFO: user get card balance
+мар. 22, 2021 6:51:58 PM banking.BankingSystem loggingInBankSystem
+INFO: user is exit
+мар. 22, 2021 6:51:58 PM banking.BankingSystem run
+INFO: exit program
+мар. 22, 2021 6:51:58 PM banking.database.SQLiteDatabase close
+INFO: close db
+мар. 22, 2021 6:51:58 PM banking.io.UserHistoryFile closeExecuteService
+INFO: stop file thread service
