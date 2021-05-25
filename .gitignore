@@ -10,7 +10,7 @@ out
 *.html
 *.css
 *.js
-*.gradle
+
 *.bat
 
 gradlew
